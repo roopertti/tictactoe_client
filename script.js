@@ -27,8 +27,8 @@
         PLAYER_PICKED: 'Ruutu valittu.',
         OPPONENT_TURN: 'Tietokoneen vuoro...',
         OPPONENT_PICKED: 'Tietokone valitsi ruudun.',
-        OPPONENT_PREVENTS_WIN: 'Tietokone yrittää estää pelaajan voiton!',
-        OPPONENT_INTENDS_WIN: 'Tietokone tekee voittavan siirron!',
+        OPPONENT_PREVENTS_WIN: 'Tietokone yrittää estää pelaajan voiton.',
+        OPPONENT_INTENDS_WIN: 'Tietokone tekee voittavan siirron.',
         PLAYER_WIN: 'Voitit pelin!',
         OPPONENT_WIN: 'Tietokone voitti!',
         TIE: 'Tasapeli!',
@@ -143,11 +143,15 @@
                 }
             }
             if(playerCounter === 3) {
-                setWinningRowColor(row);
-                return 'X';
+                return {
+                    winner: 'X',
+                    winRow: row
+                };
             } else if(opponentCounter === 3) {
-                setWinningRowColor(row);
-                return 'O';
+                return {
+                    winner: 'O',
+                    winRow: row
+                };
             };
         }
         return null;
@@ -163,6 +167,7 @@
 
     /* Pelin päätös */
     function declareEnd(winner) {
+        renderGrid(true);
         if(winner === 'X') emitMessage(messages.PLAYER_WIN, 'X');
         else if(winner === 'O') emitMessage(messages.OPPONENT_WIN, 'O');
         else emitMessage(messages.TIE, null);
@@ -173,14 +178,17 @@
     /* Vuoron vaihtava funktio (suorittaa myös vastustajan vuoron) */
     function switchTurn() {
         /* Tarkistetaan onko voitto tapahtunut */
-        var potentialWinner = checkForWin();
-        if(potentialWinner !== null) {
-            declareEnd(potentialWinner);
+        var winStatus = checkForWin();
+        if(winStatus !== null) {
+            var winner = winStatus.winner;
+            var winRow = winStatus.winRow;
+            declareEnd(winner);
+            setWinningRowColor(winRow);
             return;
         }
         
         /* Tasapelin sattuessa */
-        if(potentialWinner === null && getEmptyCellIndexes().length === 0) {
+        if(winStatus === null && getEmptyCellIndexes().length === 0) {
             declareEnd(null);
             return;
         }

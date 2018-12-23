@@ -259,16 +259,18 @@
             var div = document.createElement('div'); //Yksi solu on div elementti
             div.classList.add('game-cell'); //Ruudun tyyliluokka
             div.setAttribute('id', 'cell_' + i); //Asetetaan jokaiselle solulle id
-            if(disable) div.classList.add('wait');
             /* Sisälle laitetaan teksti riippuen taulukon solun arvosta */
             switch(grid[i]) {
                 case 'X':
-                    div.innerText = 'X';
+                    div.innerHTML = '<i class="fas fa-user"></i>';
+                    div.classList.add('disable');
                     break;
                 case 'O':
-                    div.innerText = 'O';
+                    div.innerHTML = '<i class="fas fa-desktop"></i>';
+                    div.classList.add('disable');
                     break;
                 default:
+                    if(disable) div.classList.add('disable');
                     break;
             }
             /* Solu heitetään ruudukon elementtiin */
